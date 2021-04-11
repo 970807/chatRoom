@@ -88,17 +88,26 @@ export default {
   padding: 15px 15px 15px 20px;
   z-index: 2021;
   color: #909399;
+  transition: top 0.4s, transform 2s;
+  animation: tranformAnimation 0.2s;
+  user-select: none;
 
   &.success {
     color: #67c23a;
+    border-color: #e1f3d8;
+    background: #f0f9eb;
   }
 
   &.warning {
     color: #e6a23c;
+    border-color: #faecd8;
+    background: #fdf6ec;
   }
 
   &.error {
     color: #f56c6c;
+    border-color: #fde2e2;
+    background: #fef0f0;
   }
 
   .icon {
@@ -107,6 +116,16 @@ export default {
 
   .content {
     font-size: 14px;
+  }
+}
+
+@keyframes tranformAnimation {
+  from {
+    transform: translate(-50%, -30px);
+  }
+
+  to {
+    transform: translate(-50%, 0);
   }
 }
 </style>
