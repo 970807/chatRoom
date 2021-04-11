@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     onLogin () {
-      console.log(this.username);
+      console.log('login');
     }
   }
 }
