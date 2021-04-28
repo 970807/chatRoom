@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     onLogin () {
-      console.log('login');
+      this.$store.commit('login', this.username)
     }
   }
 }
