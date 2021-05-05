@@ -40,7 +40,7 @@ export default {
 <style lang="scss" scoped>
 .login-btn {
   height: 40px;
-  margin-top: 34px;
+  margin-top: 28px;
   border: none;
   outline: none;
   background: #00b894;

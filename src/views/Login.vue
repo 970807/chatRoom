@@ -3,6 +3,7 @@
     <div class="box">
       <h3>登录聊天室</h3>
       <UserInput @unamechange="username = $event" />
+      <AvatarSelector />
       <LoginBtn :username="username" />
     </div>
   </div>
@@ -11,11 +12,13 @@
 <script>
 import UserInput from '@/components/login/UserInput'
 import LoginBtn from '@/components/login/LoginBtn'
+import AvatarSelector from '@/components/login/AvatarSelector'
 export default {
   name: 'Login',
   components: {
     UserInput,
-    LoginBtn
+    LoginBtn,
+    AvatarSelector
   },
   data () {
     return {
@@ -36,14 +39,13 @@ export default {
 
   .box {
     width: 350px;
-    height: 200px;
+    height: 275px;
     background: rgba(255, 255, 255, 0.9);
     display: flex;
     flex-direction: column;
     padding: 0 45px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    transform: translateY(-6vh);
     color: #00b894;
 
     h3 {
