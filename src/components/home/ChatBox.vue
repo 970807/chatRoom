@@ -2,22 +2,36 @@
   <div class="chat-box">
     <h3 class="headline">聊天室(0)</h3>
     <ul class="msg-area">
-      <li class="msg-item"
-          v-for="item in 10">
-        <div class="info">
-          <div class="avatar"></div>
-          <span class="nick-name">张三</span>
-          <span class="time">2021-05-03 09:31</span>
-        </div>
-        <p class="text">你好啊</p>
-      </li>
+      <template v-for="(item, index) in msgList">
+        <li v-if="item.type === 0"
+            class="tip-item"
+            :key="index">
+          <p class='text'>{{item.msg}} {{item.time}}</p>
+        </li>
+        <li v-else-if="item.type === 1"
+            class="msg-item"
+            :key="index">
+          <div class="info">
+            <div class="avatar"></div>
+            <span class="nick-name">{{item.username}}</span>
+            <span class="time">2021-05-03 09:31</span>
+          </div>
+          <p class="text">你好啊</p>
+        </li>
+      </template>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ChatBox'
+  name: 'ChatBox',
+  props: {
+    msgList: {
+      type: Array,
+      default: () => []
+    }
+  }
 }
 </script>
 
@@ -66,6 +80,16 @@ export default {
 
       .text {
         text-indent: 0.5em;
+      }
+    }
+
+    .tip-item {
+      padding: 10px 0;
+
+      .text {
+        font-size: 14px;
+        color: #7f8c8d;
+        text-align: center;
       }
     }
   }

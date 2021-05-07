@@ -1,13 +1,10 @@
 const http = require('http')
-const ws = require('nodejs-websocket')
+
 const url = require('url')
 const db = require('./db')
+const initWebSokcet = require('./websocket/ws.js')
 
-ws.createServer(conn => {
-  console.log('new user connect');
-}).listen(8080, () => {
-  console.log('running');
-})
+initWebSokcet()
 
 http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*')

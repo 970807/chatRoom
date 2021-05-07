@@ -3,7 +3,7 @@
     <div class="chat-box-wrap">
       <Aside />
       <main>
-        <ChatBox />
+        <ChatBox :msgList="msgList" />
         <SendMsgBox />
       </main>
     </div>
@@ -20,6 +20,60 @@ export default {
     Aside,
     ChatBox,
     SendMsgBox
+  },
+  data () {
+    return {
+      user: {},
+      socket: null,
+      msgList: []
+    }
+  },
+  created () {
+    const user = this.$store.state.user
+    if (!user.username) {
+      this.$router.replace('/login')
+      this.$message.error('用户名不能为空！')
+      return
+    }
+    this.user = user
+    this.connectWebSocket()
+  },
+  methods: {
+    connectWebSocket () {
+      const ws = new WebSocket('ws://localhost:8000')
+      this.socket = ws
+      ws.addEventListener('open', this.handleWsOpen.bind(this), false)
+      ws.addEventListener('close', this.handleWsClose.bind(this), false)
+      ws.addEventListener('error', this.handleWsError.bind(this), false)
+      ws.addEventListener('message', this.handleWsMessage.bind(this), false)
+    },
+    handleWsOpen (e) {
+      const ws = e.target
+      ws.send(JSON.stringify({
+        type: 0,
+        typeStr: 'login',
+        username: this.user.username,
+        avatarId: this.user.avatarId,
+        dateTime: Date.now()
+      }))
+    },
+    handleWsClose (e) {
+      console.log('ws close', e);
+    },
+    handleWsError (e) {
+      console.log('ws error', e);
+    },
+    handleWsMessage (e) {
+      const data = JSON.parse(e.data)
+      switch (data.type) {
+        // 提示信息
+        case 0:
+          this.handleTipMsg(data)
+      }
+    },
+    handleTipMsg (data) {
+      this.msgList.push(data)
+    }
   }
 }
 </script>

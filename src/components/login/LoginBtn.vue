@@ -13,12 +13,6 @@
 <script>
 export default {
   name: 'LoginBtn',
-  props: {
-    username: {
-      type: String,
-      default: ''
-    }
-  },
   data () {
     return {
       btnLoading: false
@@ -26,12 +20,7 @@ export default {
   },
   methods: {
     onLogin () {
-      if (!this.username) {
-        this.$message.warning('用户名不能为空')
-        return
-      }
-      this.$store.commit('login', this.username)
-      this.$router.push('/home')
+      this.$emit('onLogin')
     }
   }
 }

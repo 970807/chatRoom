@@ -36,6 +36,11 @@ export default {
   },
   created () {
     this.getAvatarList()
+    const avatarId = this.$store.state.user.avatarId
+    if (avatarId) {
+      this.activeAvatarId = avatarId
+      this.updateAvatarId(avatarId)
+    }
   },
   methods: {
     handleAvatarClick () {
@@ -48,7 +53,9 @@ export default {
           this.avatarList = avatarList
           // 随机选中头像
           const randomActiveAvatarIndex = Math.floor(Math.random() * avatarList.length)
-          this.activeAvatarId = avatarList[randomActiveAvatarIndex].id
+          const activeAvatarId = avatarList[randomActiveAvatarIndex].id
+          this.activeAvatarId = activeAvatarId
+          this.updateAvatarId(activeAvatarId)
         }
       }).catch(err => {
         console.log(err);
@@ -56,6 +63,10 @@ export default {
     },
     handleSelectAvatarFinish (activeAvatarId) {
       this.activeAvatarId = activeAvatarId
+      this.updateAvatarId(activeAvatarId)
+    },
+    updateAvatarId (avatarId) {
+      this.$emit('updateAvatarId', avatarId)
     }
   }
 }

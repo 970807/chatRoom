@@ -32,6 +32,12 @@ export default {
       this.$emit('unamechange', v)
     }
   },
+  created () {
+    const username = this.$store.state.user.username
+    if (username) {
+      this.username = username
+    }
+  },
   methods: {
     onClearInput () {
       this.username = ''

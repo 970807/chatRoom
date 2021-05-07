@@ -2,9 +2,9 @@
   <div class="login-wrap">
     <div class="box">
       <h3>登录聊天室</h3>
-      <UserInput @unamechange="username = $event" />
-      <AvatarSelector />
-      <LoginBtn :username="username" />
+      <UserInput @unamechange="user.username = $event" />
+      <AvatarSelector @updateAvatarId="user.avatarId = $event" />
+      <LoginBtn @onLogin="handleLogin" />
     </div>
   </div>
 </template>
@@ -22,7 +22,20 @@ export default {
   },
   data () {
     return {
-      username: ''
+      user: {
+        username: '',
+        avatarId: 0
+      }
+    }
+  },
+  methods: {
+    handleLogin () {
+      if (!this.user.username) {
+        this.$message.warning('用户名不能为空')
+        return
+      }
+      this.$store.commit('login', this.user)
+      this.$router.push('/home')
     }
   }
 }
