@@ -1,13 +1,13 @@
 <template>
   <aside>
-    <h3 class="online-member">当前在线人数：{{onlineMemberCount}}</h3>
+    <h3 class="online-member">当前在线人数：{{onlineUserList.length}}</h3>
     <div class="member-list">
       <div class="item"
-           v-for="(item, index) in memberList"
+           v-for="(item, index) in onlineUserList"
            :key="item.id">
         <div class="order">{{index + 1}}</div>
-        <div class="avatar"></div>
-        <div class="nick-name">{{item.nickName}}</div>
+        <div class="avatar">{{item.avatarId}}</div>
+        <div class="nick-name">{{item.username}}</div>
       </div>
     </div>
   </aside>
@@ -16,6 +16,12 @@
 <script>
 export default {
   name: 'Aside',
+  props: {
+    onlineUserList: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
       onlineMemberCount: 98,

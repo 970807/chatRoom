@@ -1,22 +1,22 @@
 <template>
   <div class="chat-box">
-    <h3 class="headline">聊天室(0)</h3>
+    <h3 class="headline">消息记录                                                                             ({{msgCount}})</h3>
     <ul class="msg-area">
       <template v-for="(item, index) in msgList">
         <li v-if="item.type === 0"
             class="tip-item"
             :key="index">
-          <p class='text'>{{item.msg}} {{item.time}}</p>
+          <p class='text'>{{item.msg}} {{item.dataTime}}</p>
         </li>
         <li v-else-if="item.type === 1"
             class="msg-item"
             :key="index">
           <div class="info">
-            <div class="avatar"></div>
+            <div class="avatar">{{item.avatarId}}</div>
             <span class="nick-name">{{item.username}}</span>
-            <span class="time">2021-05-03 09:31</span>
+            <span class="time">{{item.dataTime}}</span>
           </div>
-          <p class="text">你好啊</p>
+          <p class="text">{{item.msg}}</p>
         </li>
       </template>
     </ul>
@@ -30,6 +30,11 @@ export default {
     msgList: {
       type: Array,
       default: () => []
+    }
+  },
+  computed: {
+    msgCount() {
+      return this.msgList.filter(item => item.type === 1).length
     }
   }
 }

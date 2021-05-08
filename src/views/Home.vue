@@ -1,10 +1,10 @@
 <template>
   <div class="home-wrap">
     <div class="chat-box-wrap">
-      <Aside />
+      <Aside :onlineUserList="onlineUserList" />
       <main>
         <ChatBox :msgList="msgList" />
-        <SendMsgBox />
+        <SendMsgBox @sendMsg="handleSendMsg" />
       </main>
     </div>
   </div>
@@ -25,7 +25,8 @@ export default {
     return {
       user: {},
       socket: null,
-      msgList: []
+      msgList: [],
+      onlineUserList: []
     }
   },
   created () {
@@ -39,6 +40,31 @@ export default {
     this.connectWebSocket()
   },
   methods: {
+    sengMsg({type, typeStr, msg = ''}) {
+      this.socket.send(JSON.stringify({
+        type,
+        typeStr,
+        username: this.user.username,
+        avatarId: this.user.avatarId,
+        dateTime: Date.now(),
+        msg
+      }))
+    },
+    handleSendMsg(msg) {
+      // 发送消息按钮被单击
+      this.sengMsg({
+        type: 1,
+        typeStr: 'sendMsg',
+        msg
+      })
+    },
+    handleWsOpen () {
+      // 首次进入home页，发送用户登陆相关信息
+      this.sengMsg({
+        type: 0,
+        typeStr: 'login'
+      })
+    },
     connectWebSocket () {
       const ws = new WebSocket('ws://localhost:8000')
       this.socket = ws
@@ -47,32 +73,23 @@ export default {
       ws.addEventListener('error', this.handleWsError.bind(this), false)
       ws.addEventListener('message', this.handleWsMessage.bind(this), false)
     },
-    handleWsOpen (e) {
-      const ws = e.target
-      ws.send(JSON.stringify({
-        type: 0,
-        typeStr: 'login',
-        username: this.user.username,
-        avatarId: this.user.avatarId,
-        dateTime: Date.now()
-      }))
-    },
-    handleWsClose (e) {
-      console.log('ws close', e);
+    handleWsClose () {
+      this.$message.error('websocket断开连接')
     },
     handleWsError (e) {
       console.log('ws error', e);
+      this.$message.error('未知错误')
     },
     handleWsMessage (e) {
+      // 接收到服务端发送的消息
       const data = JSON.parse(e.data)
-      switch (data.type) {
-        // 提示信息
-        case 0:
-          this.handleTipMsg(data)
+      if(data.type === 0 || data.type === 1) {
+        this.msgList.push(data)
+      } else if(data.type === 2) {
+        // 更新在线用户列表
+        this.onlineUserList = data.msg
       }
-    },
-    handleTipMsg (data) {
-      this.msgList.push(data)
+      
     }
   }
 }

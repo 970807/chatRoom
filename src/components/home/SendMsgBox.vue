@@ -1,15 +1,26 @@
 <template>
   <div class="send-msg-box">
-    <textarea />
+    <textarea v-model="msg" />
     <div class="btns">
-      <button class="send-btn">发送</button>
+      <button class="send-btn" @click="handleSendBtnClick">发送</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SendMsgBox'
+  name: 'SendMsgBox',
+  data() {
+    return {
+      msg: ''
+    }
+  },
+  methods: {
+    handleSendBtnClick() {
+      this.$emit('sendMsg', this.msg)
+      this.msg = ''
+    }
+  }
 }
 </script>
 
