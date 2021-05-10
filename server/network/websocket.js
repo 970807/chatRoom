@@ -1,5 +1,5 @@
 const Ws = require('ws')
-
+const uuid = require('uuid')
 
 const server = new Ws.Server({ port: 8000 })
 
@@ -30,16 +30,20 @@ function handleError() {
 }
 
 function handleConnection(ws) {
-  console.log('ws connection');
-
-  ws.on('message', handleMessage)
-  ws.on('close', handleUserCloseConnection)
+  const userId = generateUserId()
+  ws.on('message', msg => {
+    handleMessage(msg, userId)
+  })
+  ws.on('close', () => {
+    handleUserCloseConnection(userId)
+  })
 
 }
 
-server.on('ping', () => {
-  console.log('1');
-})
+function generateUserId() {
+  // 产生用户唯一id
+  return uuid.v1().replace(/-/g, '')
+}
 
 function broadcastMsg({type, typeStr, msg = '', dataTime, username, avatarId}) {
   // 广播消息
@@ -50,22 +54,22 @@ function broadcastMsg({type, typeStr, msg = '', dataTime, username, avatarId}) {
   })
 }
 
-function handleMessage(msg) {
+function handleMessage(msg, userId) {
   const data = JSON.parse(msg)
   switch(data.type) {
     case 0:
-      handleUserConnected(data)
+      handleUserConnected(data, userId)
       break
     case 1:
       handleUserSendMsg(data)
   }
 }
 
-function handleUserConnected(data) {
+function handleUserConnected(data, userId) {
   // 新用户连接
   const { username, avatarId, dataTime } = data
   console.log(`用户${username}进入聊天室`);
-  updateOnlineUserList(username, avatarId)
+  updateOnlineUserList({username, avatarId, userId})
   broadcastMsg({
     type: 0,
     typeStr: 'tip',
@@ -74,9 +78,12 @@ function handleUserConnected(data) {
   })
 }
 
-function updateOnlineUserList(username, avatarId) {
+function updateOnlineUserList(userInfo) {
   // 更新在线用户列表
-  onlineUserList.push({ username, avatarId })
+  const userId = userInfo.userId
+  if(userId && !onlineUserList.find(item => item.userId === userId)) {
+    onlineUserList.push(userInfo)
+  }
   broadcastMsg({
     type: 2,
     typeStr: 'updateOnlineUserList',
@@ -97,9 +104,17 @@ function handleUserSendMsg(data) {
   })
 }
 
-function handleUserCloseConnection() {
+function handleUserCloseConnection(userId) {
   // 用户断开连接
-  
+  const index = onlineUserList.findIndex(item => item.userId === userId)
+  if(index !== -1) {
+    onlineUserList.splice(index, 1)
+    broadcastMsg({
+      type: 2,
+      typeStr: 'updateOnlineUserList',
+      msg: onlineUserList
+    })
+  }
 }
 
 
