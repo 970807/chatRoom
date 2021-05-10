@@ -6,7 +6,7 @@
         <li v-if="item.type === 0"
             class="tip-item"
             :key="index">
-          <p class='text'>{{item.msg}} {{item.dateTime}}</p>
+          <p class='text'>{{item.msg}}</p>
         </li>
         <li v-else-if="item.type === 1"
             class="msg-item"
@@ -15,7 +15,7 @@
             <div class="avatar"
                  :style="{backgroundImage: `url(${getAvatarUrl(item.avatarId)})`}"></div>
             <span class="nick-name">{{item.username}}</span>
-            <span class="time">{{item.dateTime}}</span>
+            <span class="time">{{timeFormatter(item.dateTime)}}</span>
           </div>
           <p class="text">{{item.msg}}</p>
         </li>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import timeFormatter from '@/utils/timeFormatter'
 export default {
   name: 'ChatBox',
   props: {
@@ -43,6 +44,7 @@ export default {
     }
   },
   methods: {
+    timeFormatter,
     getAvatarUrl (avatarId) {
       let avatarUrl = ''
       const res = this.avatarList.find(item => item.id === avatarId)
@@ -95,7 +97,11 @@ export default {
         }
 
         .nick-name {
-          padding: 0 4px;
+          padding: 0 12px 0 4px;
+        }
+
+        .time {
+          font-size: 14px;
         }
       }
 

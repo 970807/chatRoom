@@ -73,7 +73,7 @@ function handleUserConnected(data, userId) {
   broadcastMsg({
     type: 0,
     typeStr: 'tip',
-    msg: `用户${username}进入聊天室`,
+    msg: `${username} 进入聊天室`,
     dateTime
   })
 }
