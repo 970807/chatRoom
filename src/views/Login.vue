@@ -35,6 +35,7 @@ export default {
         return
       }
       this.$store.commit('login', this.user)
+      sessionStorage.setItem('user', JSON.stringify(this.user))
       this.$router.push('/home')
     }
   }

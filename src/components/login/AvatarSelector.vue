@@ -36,10 +36,10 @@ export default {
   },
   created () {
     this.getAvatarList()
-    const avatarId = this.$store.state.user.avatarId
-    if (avatarId) {
-      this.activeAvatarId = avatarId
-      this.updateAvatarId(avatarId)
+    const user = this.$store.state.user || JSON.parse(sessionStorage.getItem('user'))
+    if (user) {
+      this.activeAvatarId = user.avatarId
+      this.updateAvatarId(user.avatarId)
     }
   },
   methods: {
@@ -51,6 +51,7 @@ export default {
         const avatarList = res.data
         if (avatarList.length > 0) {
           this.avatarList = avatarList
+          if (this.activeAvatarId) return
           // 随机选中头像
           const randomActiveAvatarIndex = Math.floor(Math.random() * avatarList.length)
           const activeAvatarId = avatarList[randomActiveAvatarIndex].id

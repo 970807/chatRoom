@@ -33,9 +33,9 @@ export default {
     }
   },
   created () {
-    const username = this.$store.state.user.username
-    if (username) {
-      this.username = username
+    const user = this.$store.state.user || JSON.parse(sessionStorage.getItem('user'))
+    if (user) {
+      this.username = user.username
     }
   },
   methods: {

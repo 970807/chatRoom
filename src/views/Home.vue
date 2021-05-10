@@ -30,7 +30,7 @@ export default {
     }
   },
   created () {
-    const user = this.$store.state.user
+    const user = this.$store.state.user || JSON.parse(sessionStorage.getItem('user'))
     if (!user.username) {
       this.$router.replace('/login')
       this.$message.error('用户名不能为空！')
@@ -40,7 +40,7 @@ export default {
     this.connectWebSocket()
   },
   methods: {
-    sengMsg({type, typeStr, msg = ''}) {
+    sengMsg ({ type, typeStr, msg = '' }) {
       this.socket.send(JSON.stringify({
         type,
         typeStr,
@@ -50,7 +50,7 @@ export default {
         msg
       }))
     },
-    handleSendMsg(msg) {
+    handleSendMsg (msg) {
       // 发送消息按钮被单击
       this.sengMsg({
         type: 1,
@@ -83,13 +83,13 @@ export default {
     handleWsMessage (e) {
       // 接收到服务端发送的消息
       const data = JSON.parse(e.data)
-      if(data.type === 0 || data.type === 1) {
+      if (data.type === 0 || data.type === 1) {
         this.msgList.push(data)
-      } else if(data.type === 2) {
+      } else if (data.type === 2) {
         // 更新在线用户列表
         this.onlineUserList = data.msg
       }
-      
+
     }
   }
 }
