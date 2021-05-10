@@ -1,9 +1,11 @@
 <template>
   <div class="home-wrap">
     <div class="chat-box-wrap">
-      <Aside :onlineUserList="onlineUserList" />
+      <Aside :onlineUserList="onlineUserList"
+             :avatarList="avatarList" />
       <main>
-        <ChatBox :msgList="msgList" />
+        <ChatBox :msgList="msgList"
+                 :avatarList="avatarList" />
         <SendMsgBox @sendMsg="handleSendMsg" />
       </main>
     </div>
@@ -14,6 +16,7 @@
 import Aside from '@/components/home/Aside'
 import ChatBox from '@/components/home/ChatBox'
 import SendMsgBox from '@/components/home/SendMsgBox'
+import { getAvatarList } from '@/api/index'
 export default {
   name: 'Home',
   components: {
@@ -26,7 +29,8 @@ export default {
       user: {},
       socket: null,
       msgList: [],
-      onlineUserList: []
+      onlineUserList: [],
+      avatarList: []
     }
   },
   created () {
@@ -38,8 +42,17 @@ export default {
     }
     this.user = user
     this.connectWebSocket()
+    this.getAvatarList()
   },
   methods: {
+    getAvatarList () {
+      // 获取头像列表
+      getAvatarList().then(res => {
+        this.avatarList = res.data
+      }).catch(err => {
+        console.log(err);
+      })
+    },
     sengMsg ({ type, typeStr, msg = '' }) {
       this.socket.send(JSON.stringify({
         type,

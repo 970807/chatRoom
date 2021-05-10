@@ -45,11 +45,11 @@ function generateUserId() {
   return uuid.v1().replace(/-/g, '')
 }
 
-function broadcastMsg({type, typeStr, msg = '', dataTime, username, avatarId}) {
+function broadcastMsg({type, typeStr, msg = '', dateTime, username, avatarId}) {
   // 广播消息
   server.clients.forEach(c => {
     if(c.readyState === Ws.OPEN) {
-      c.send(JSON.stringify({ type, typeStr, msg, dataTime, username, avatarId }))
+      c.send(JSON.stringify({ type, typeStr, msg, dateTime, username, avatarId }))
     }
   })
 }
@@ -67,14 +67,14 @@ function handleMessage(msg, userId) {
 
 function handleUserConnected(data, userId) {
   // 新用户连接
-  const { username, avatarId, dataTime } = data
+  const { username, avatarId, dateTime } = data
   console.log(`用户${username}进入聊天室`);
   updateOnlineUserList({username, avatarId, userId})
   broadcastMsg({
     type: 0,
     typeStr: 'tip',
     msg: `用户${username}进入聊天室`,
-    dataTime
+    dateTime
   })
 }
 
@@ -93,12 +93,12 @@ function updateOnlineUserList(userInfo) {
 
 function handleUserSendMsg(data) {
   // 接收到用户发送的消息
-  const { msg, dataTime, username, avatarId } = data
+  const { msg, dateTime, username, avatarId } = data
   broadcastMsg({
     type: 1,
     typeStr: 'userMsg',
     msg: msg,
-    dataTime: dataTime,
+    dateTime: dateTime,
     username: username,
     avatarId: avatarId
   })

@@ -6,7 +6,8 @@
            v-for="(item, index) in onlineUserList"
            :key="item.id">
         <div class="order">{{index + 1}}</div>
-        <div class="avatar">{{item.avatarId}}</div>
+        <div class="avatar"
+             :style="{backgroundImage: `url(${getAvatarUrl(item.avatarId)})`}"></div>
         <div class="nick-name">{{item.username}}</div>
       </div>
     </div>
@@ -20,53 +21,20 @@ export default {
     onlineUserList: {
       type: Array,
       default: () => []
+    },
+    avatarList: {
+      type: Array,
+      default: () => []
     }
   },
-  data () {
-    return {
-      onlineMemberCount: 98,
-      memberList: [
-        {
-          id: 1,
-          avatar: '',
-          nickName: '张三'
-        },
-        {
-          id: 2,
-          avatar: '',
-          nickName: '王五'
-        },
-        {
-          id: 3,
-          avatar: '',
-          nickName: '赵六'
-        },
-        {
-          id: 4,
-          avatar: '',
-          nickName: '李雷'
-        },
-        {
-          id: 5,
-          avatar: '',
-          nickName: '韩丹cdscdscsdcdscdscdscdscd'
-        },
-        {
-          id: 6,
-          avatar: '',
-          nickName: '白居易'
-        },
-        {
-          id: 7,
-          avatar: '',
-          nickName: '王薇'
-        },
-        {
-          id: 8,
-          avatar: '',
-          nickName: '露娜'
-        }
-      ]
+  methods: {
+    getAvatarUrl (avatarId) {
+      let avatarUrl = ''
+      const res = this.avatarList.find(item => item.id === avatarId)
+      if (res) {
+        avatarUrl = res.url
+      }
+      return avatarUrl
     }
   }
 }
@@ -126,6 +94,7 @@ aside {
         margin: 0 15px 0 10px;
         border-radius: 50%;
         border: 1px solid #7ed6df;
+        background-size: cover;
       }
 
       .nick-name {

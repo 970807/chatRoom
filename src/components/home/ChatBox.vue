@@ -1,20 +1,21 @@
 <template>
   <div class="chat-box">
-    <h3 class="headline">消息记录                                                                             ({{msgCount}})</h3>
+    <h3 class="headline">消息记录 ({{msgCount}})</h3>
     <ul class="msg-area">
       <template v-for="(item, index) in msgList">
         <li v-if="item.type === 0"
             class="tip-item"
             :key="index">
-          <p class='text'>{{item.msg}} {{item.dataTime}}</p>
+          <p class='text'>{{item.msg}} {{item.dateTime}}</p>
         </li>
         <li v-else-if="item.type === 1"
             class="msg-item"
             :key="index">
           <div class="info">
-            <div class="avatar">{{item.avatarId}}</div>
+            <div class="avatar"
+                 :style="{backgroundImage: `url(${getAvatarUrl(item.avatarId)})`}"></div>
             <span class="nick-name">{{item.username}}</span>
-            <span class="time">{{item.dataTime}}</span>
+            <span class="time">{{item.dateTime}}</span>
           </div>
           <p class="text">{{item.msg}}</p>
         </li>
@@ -30,11 +31,25 @@ export default {
     msgList: {
       type: Array,
       default: () => []
+    },
+    avatarList: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
-    msgCount() {
+    msgCount () {
       return this.msgList.filter(item => item.type === 1).length
+    }
+  },
+  methods: {
+    getAvatarUrl (avatarId) {
+      let avatarUrl = ''
+      const res = this.avatarList.find(item => item.id === avatarId)
+      if (res) {
+        avatarUrl = res.url
+      }
+      return avatarUrl
     }
   }
 }
@@ -76,6 +91,7 @@ export default {
           height: 23px;
           border-radius: 50%;
           border: 1px solid orange;
+          background-size: cover;
         }
 
         .nick-name {
