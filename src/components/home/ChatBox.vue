@@ -1,7 +1,8 @@
 <template>
   <div class="chat-box">
     <h3 class="headline">消息记录 ({{msgCount}})</h3>
-    <ul class="msg-area">
+    <ul class="msg-area"
+        ref="msgArea">
       <template v-for="(item, index) in msgList">
         <li v-if="item.type === 0"
             class="tip-item"
@@ -41,6 +42,13 @@ export default {
   computed: {
     msgCount () {
       return this.msgList.filter(item => item.type === 1).length
+    }
+  },
+  watch: {
+    'msgList.length' () {
+      this.$nextTick(() => {
+        this.$refs.msgArea.scrollTop = this.$refs.msgArea.scrollHeight
+      })
     }
   },
   methods: {
@@ -106,7 +114,8 @@ export default {
       }
 
       .text {
-        text-indent: 0.5em;
+        padding-left: 0.5em;
+        white-space: pre;
       }
     }
 

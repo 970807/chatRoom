@@ -32,7 +32,7 @@ function handleError() {
 function handleConnection(ws) {
   const userId = generateUserId()
   ws.on('message', msg => {
-    handleMessage(msg, userId)
+    handleMessage(msg, userId, ws)
   })
   ws.on('close', () => {
     handleUserCloseConnection(userId)
@@ -54,13 +54,29 @@ function broadcastMsg({type, typeStr, msg = '', dateTime, username, avatarId}) {
   })
 }
 
-function handleMessage(msg, userId) {
+function handleMessage(msg, userId, ws) {
   const data = JSON.parse(msg)
+  if(!data.username) {
+    handleSendError({msg:'用户名不能为空', ws})
+    return
+  }
+  if(typeof data.avatarId !== 'number') {
+    handleSendError({msg:'用户名头像参数错误', ws})
+    return
+  }
+  if(!data.dateTime) {
+    handleSendError({msg:'未知的时间', ws})
+    return
+  }
   switch(data.type) {
     case 0:
       handleUserConnected(data, userId)
       break
     case 1:
+      if(!data.msg) {
+        handleSendError({msg:'请输入要发送的消息', ws})
+        return
+      }
       handleUserSendMsg(data)
   }
 }
@@ -115,6 +131,15 @@ function handleUserCloseConnection(userId) {
       msg: onlineUserList
     })
   }
+}
+
+function handleSendError({msg, ws}) {
+  // 发生错误
+  ws.send(JSON.stringify({
+    type: 3,
+    typeStr: 'errorTip',
+    msg
+  }))
 }
 
 

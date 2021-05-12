@@ -101,6 +101,9 @@ export default {
       } else if (data.type === 2) {
         // 更新在线用户列表
         this.onlineUserList = data.msg
+      } else if (data.type === 3) {
+        // 错误提示
+        this.$message.error(data.msg)
       }
 
     }

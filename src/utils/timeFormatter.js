@@ -19,7 +19,6 @@ function timeFormatter(timeStamp) {
   if(year !== curYear || month !== curMonth || day !== curDay) {
     res = padStr(year) + '-' + padStr(month) + '-' + padStr(day) + ' ' + res
   }
-  console.log(res);
   return res
 }
 

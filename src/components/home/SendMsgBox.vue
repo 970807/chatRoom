@@ -2,7 +2,8 @@
   <div class="send-msg-box">
     <textarea v-model="msg" />
     <div class="btns">
-      <button class="send-btn" @click="handleSendBtnClick">发送</button>
+      <button class="send-btn"
+              @click="handleSendBtnClick">发送</button>
     </div>
   </div>
 </template>
@@ -10,13 +11,17 @@
 <script>
 export default {
   name: 'SendMsgBox',
-  data() {
+  data () {
     return {
       msg: ''
     }
   },
   methods: {
-    handleSendBtnClick() {
+    handleSendBtnClick () {
+      if (this.msg.trim() === '') {
+        this.$message.info('请输入要发送的消息')
+        return
+      }
       this.$emit('sendMsg', this.msg)
       this.msg = ''
     }
