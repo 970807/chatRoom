@@ -3,7 +3,6 @@
 */
 
 const mysql = require('mysql')
-const { connect } = require('nodejs-websocket')
 
 exports.base = (sql, data) => {
   return new Promise((resolve, reject) => {
