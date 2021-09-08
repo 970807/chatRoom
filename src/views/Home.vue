@@ -79,7 +79,9 @@ export default {
       })
     },
     connectWebSocket () {
-      const ws = new WebSocket('ws://localhost:8000')
+      const url = process.env.NODE_ENV ===
+        'development' ? 'ws://localhost:8000' : 'ws://chatroom.ggh0807.cn:8000'
+      const ws = new WebSocket(url)
       this.socket = ws
       ws.addEventListener('open', this.handleWsOpen.bind(this), false)
       ws.addEventListener('close', this.handleWsClose.bind(this), false)

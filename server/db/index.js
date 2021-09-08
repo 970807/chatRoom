@@ -3,21 +3,15 @@
 */
 
 const mysql = require('mysql')
-const { connect } = require('nodejs-websocket')
 
 exports.base = (sql, data) => {
   return new Promise((resolve, reject) => {
-    const connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '123456',
-      database: 'chatroom'
-    })
+    const connection = mysql.createConnection(require('../config/mysql.config'))
 
     connection.connect()
 
     connection.query(sql, data, (err, results) => {
-      if(err) {
+      if (err) {
         console.log(err)
         return reject(err)
       }
